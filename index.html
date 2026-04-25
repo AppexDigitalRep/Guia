@@ -8,7 +8,7 @@
     <style>
         /* CORE VARIABLES */
         :root {
-            --gold-light: #F9E596;
+            --gold-light: #FDF0B0;
             --gold-base: #D4AF37;
             --gold-dark: #997A15;
             --copper-base: #B87333;
@@ -58,11 +58,12 @@
             background: rgba(18, 18, 20, 0.6);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.25);
             border-radius: 20px;
             padding: 60px 50px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.6),
-                        inset 0 1px 0 rgba(255,255,255,0.05);
+                        inset 0 1px 0 rgba(255,255,255,0.05),
+                        inset 0 0 30px rgba(212, 175, 55, 0.04);
             opacity: 0;
             transform: translateY(30px);
             animation: fadeUp 1.2s var(--transition-slow) forwards;
@@ -98,7 +99,7 @@
             background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-base) 50%, var(--gold-dark) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            text-shadow: 0 0 40px rgba(212, 175, 55, 0.25);
         }
 
         .subtitle {
@@ -140,8 +141,8 @@
             top: 0;
             width: 1px;
             height: 100%;
-            background: linear-gradient(to bottom, transparent, var(--gold-base), transparent);
-            opacity: 0.5;
+            background: linear-gradient(to bottom, transparent, var(--gold-light), transparent);
+            opacity: 0.6;
         }
 
         h2 {
@@ -154,12 +155,14 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
 
         h2::before {
             content: '✦';
             font-size: 0.8rem;
-            color: var(--copper-base);
+            color: var(--gold-base);
+            text-shadow: 0 0 10px var(--gold-light);
         }
 
         p {
@@ -172,10 +175,11 @@
         }
 
         .highlight {
-            color: var(--gold-base);
+            color: var(--gold-light);
             font-weight: 400;
             font-style: italic;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            letter-spacing: 0.5px;
         }
 
         .ornament {
@@ -183,9 +187,10 @@
             text-align: center;
             margin: 60px 0;
             font-size: 1.5rem;
-            color: var(--copper-base);
-            opacity: 0.6;
+            color: var(--gold-base);
+            opacity: 0.8;
             letter-spacing: 15px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
         }
 
         footer {
@@ -200,9 +205,10 @@
             position: absolute;
             top: 0; left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 150px;
             height: 1px;
-            background: radial-gradient(circle, var(--gold-base), transparent);
+            background: radial-gradient(circle, var(--gold-light), transparent);
+            opacity: 0.7;
         }
 
         .footer-text {
@@ -211,9 +217,10 @@
             font-size: 1.2rem;
             letter-spacing: 3px;
             line-height: 2;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
-        /* FAB MODULE (FLOATING ACTION BUTTON) */
+        /* FAB MODULE (FLOATING ACTION BUTTON) - LUMINOSIDAD MAXIMIZADA */
         .audio-control {
             position: fixed;
             bottom: 40px;
@@ -225,39 +232,39 @@
         }
 
         .audio-btn {
-            background: rgba(18, 18, 20, 0.8);
-            border: 1px solid var(--gold-dark);
-            color: var(--gold-base);
-            width: 55px;
-            height: 55px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--gold-light);
+            color: var(--gold-light);
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(15px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2), inset 0 0 15px rgba(212, 175, 55, 0.1);
             outline: none;
         }
 
         .audio-btn:hover {
             background: rgba(212, 175, 55, 0.1);
-            border-color: var(--gold-base);
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.4), inset 0 0 20px rgba(212, 175, 55, 0.2);
+            transform: scale(1.08);
         }
 
         .audio-btn.playing {
-            animation: pulse 2s infinite;
-            border-color: var(--gold-light);
-            color: var(--gold-light);
+            animation: pulse-light 2.5s infinite;
+            background: rgba(212, 175, 55, 0.15);
+            color: #FFF;
+            border-color: #FFF;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.3); }
-            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        @keyframes pulse-light {
+            0% { box-shadow: 0 0 0 0 rgba(249, 229, 150, 0.5); }
+            70% { box-shadow: 0 0 0 20px rgba(249, 229, 150, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(249, 229, 150, 0); }
         }
 
         .audio-btn svg {
@@ -271,12 +278,13 @@
             font-family: 'Cinzel', serif;
             font-size: 0.85rem;
             letter-spacing: 2px;
-            color: var(--copper-base);
+            color: var(--gold-light);
             opacity: 0;
             transform: translateX(10px);
             transition: all 0.3s ease;
             pointer-events: none;
             text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
         }
 
         .audio-control:hover .audio-tooltip {
@@ -347,7 +355,7 @@
     </div>
 
     <div class="audio-control">
-        <span class="audio-tooltip" id="audio-text">Voz Interna</span>
+        <span class="audio-tooltip" id="audio-text">Armonía</span>
         <button class="audio-btn" id="play-btn" aria-label="Reproducir mensaje">
             <svg id="icon-play" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z"/>
@@ -375,8 +383,8 @@
         sections.forEach(sec => observer.observe(sec));
 
         /**
-         * CORE LOGIC: WEB SPEECH API
-         * Orquesta la síntesis asíncrona de voz.
+         * CORE LOGIC: WEB SPEECH API & DICCIONARIO FONÉTICO
+         * Orquesta la síntesis asíncrona de voz asegurando precisión en nomenclatura propia.
          */
         const playBtn = document.getElementById('play-btn');
         const iconPlay = document.getElementById('icon-play');
@@ -387,24 +395,54 @@
         let isPlaying = false;
         let utterance = null;
 
-        // Limpieza de Nodos DOM para procesamiento de String plano
+        // Limpieza de Nodos DOM y calibración fonética para motor TTS
         function getCleanText() {
-            const content = document.getElementById('content-area').innerText;
-            return content.replace(/✧ ✦ ✧/g, ''); 
+            let content = document.getElementById('content-area').innerText;
+            // Limpieza de caracteres de diseño visual
+            content = content.replace(/✧ ✦ ✧/g, ''); 
+            
+            // Diccionario de corrección fonética (Inyecta pronunciación literal al motor)
+            const phoneticMap = {
+                "Illa": "Íya",
+                "Katering": "Káterin",
+                "Ayni": "Aini",
+                "Chacana": "Chakána",
+                "Cusco": "Kúsco",
+                "Samurái": "Samurái",
+                "Jabalí": "Jabalí"
+            };
+
+            // Iteración y reemplazo global respetando límites de palabras
+            for (const [word, phonetic] of Object.entries(phoneticMap)) {
+                const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                content = content.replace(regex, phonetic);
+            }
+
+            return content;
         }
 
         function initAudio() {
             if (utterance) return;
             utterance = new SpeechSynthesisUtterance(getCleanText());
-            utterance.lang = 'es-ES'; // Normalización regional
-            utterance.rate = 0.85;    // Desaceleración para absorción cognitiva
-            utterance.pitch = 0.9;    // Ajuste de frecuencia
+            utterance.lang = 'es-MX'; // Prioriza español latino neutro
+            utterance.rate = 0.82;    // Cadencia balanceada y fluida
+            utterance.pitch = 1.1;    // Frecuencia media-alta (Voz suave y clara)
+            utterance.volume = 1.0;
             
-            // Selección dinámica de voz OS-Level
             const voices = synth.getVoices();
-            const preferredVoice = voices.find(v => v.lang.includes('es') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Microsoft')));
-            if(preferredVoice) {
-                utterance.voice = preferredVoice;
+            // Algoritmo de selección: Prioriza perfiles vocales suaves, femeninos o neurales/naturales
+            const peacefulVoice = voices.find(v => 
+                (v.lang.includes('es') && 
+                (v.name.toLowerCase().includes('female') || 
+                 v.name.toLowerCase().includes('mujer') || 
+                 v.name.toLowerCase().includes('sabina') || 
+                 v.name.toLowerCase().includes('monica') ||
+                 v.name.toLowerCase().includes('lucia') ||
+                 v.name.toLowerCase().includes('natural'))
+                )) || voices.find(v => v.lang.includes('es'));
+
+            if(peacefulVoice) {
+                utterance.voice = peacefulVoice;
             }
 
             utterance.onend = resetUI;
@@ -416,7 +454,7 @@
             playBtn.classList.remove('playing');
             iconPlay.style.display = 'block';
             iconPause.style.display = 'none';
-            audioText.textContent = 'Voz Interna';
+            audioText.textContent = 'Armonía';
         }
 
         playBtn.addEventListener('click', () => {
