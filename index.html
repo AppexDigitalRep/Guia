@@ -413,8 +413,8 @@
         sections.forEach(sec => observer.observe(sec));
 
         /**
-         * CORE LOGIC: CLOUD STREAMING AUDIO ENGINE (Extracción C4I)
-         * Evade bloqueos nativos del OS mediante carga de audio en red y stripping de referrer.
+         * CORE LOGIC: CLOUD STREAMING AUDIO ENGINE CON CHUNKING ESTRICTO Y THROTTLING
+         * Evade el Payload Overflow de Google TTS limitando a < 150 caracteres y agregando pausas tácticas.
          */
         const playBtn = document.getElementById('play-btn');
         const iconPlay = document.getElementById('icon-play');
@@ -451,6 +451,7 @@
             isPlaying = false;
             if (window.currentAudio && !window.currentAudio.paused) {
                 window.currentAudio.pause();
+                window.currentAudio.src = '';
                 window.currentAudio = null;
             }
             playBtn.classList.remove('playing');
@@ -475,49 +476,82 @@
 
             const rawText = getCleanText();
             const cleanText = rawText.replace(/[\n\r]/g, ' ').replace(/\s{2,}/g, ' ');
-            // CHUNKING: Cortar texto en oraciones para evitar que la API externa colapse por payload grande
-            const chunks = cleanText.match(/[^.!?]+[.!?]+|\s*[^.!?]+$/g).filter(s => s.trim().length > 0);
+            
+            // FRAGMENTACIÓN ESTRICTA: Cortar oraciones, y subdividir las que excedan 150 caracteres.
+            // Google TTS colapsa con cadenas > 200 caracteres, causando el corte en la tercera página.
+            const rawChunks = cleanText.match(/[^.!?]+[.!?]+|\s*[^.!?]+$/g) || [cleanText];
+            const chunks = [];
+            const MAX_LENGTH = 150;
+
+            rawChunks.forEach(sentence => {
+                if (sentence.trim().length <= MAX_LENGTH) {
+                    chunks.push(sentence.trim());
+                } else {
+                    let words = sentence.split(' ');
+                    let currentChunk = '';
+                    words.forEach(word => {
+                        if ((currentChunk + word).length > MAX_LENGTH) {
+                            chunks.push(currentChunk.trim());
+                            currentChunk = word + ' ';
+                        } else {
+                            currentChunk += word + ' ';
+                        }
+                    });
+                    if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+                }
+            });
+
             let chunkIndex = 0;
 
             window.currentAudio = new Audio();
             
-            // SILENT UNLOCKER: Fuerza la liberación del permiso Autoplay en móviles
+            // SILENT UNLOCKER
             window.currentAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-            window.currentAudio.play().catch(err => { console.warn("Unlocker detectado", err); });
+            window.currentAudio.play().catch(err => { console.warn("Unlocker silencioso", err); });
             
-            // Ajuste de Paz: Disminuir la velocidad nativa de la voz de Google (0.85 = Paz y Claridad)
+            // Velocidad optimizada para ritmo suave
             window.currentAudio.playbackRate = 0.85; 
 
             const playNextChunk = () => {
+                if (!isPlaying) return; // Validación extra de estado
+                
                 if (chunkIndex >= chunks.length) {
                     stopAudio();
                     return;
                 }
                 
-                const payload = encodeURIComponent(chunks[chunkIndex].trim());
-                // Llamada a la nube (Google TTS) para renderizado acústico. tl=es-US es el más estable.
+                const payload = encodeURIComponent(chunks[chunkIndex]);
                 const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=es-US&q=${payload}`;
                 
                 window.currentAudio.src = url;
                 window.currentAudio.play().catch(e => {
-                    console.error("Audio Primario Bloqueado:", e);
-                    // Fallback de emergencia si Google bloquea temporalmente la IP
+                    console.error("Audio API Blocked:", e);
+                    // Fallback
                     const urlBackup = `https://dict.youdao.com/dictvoice?audio=${payload}&le=es`;
                     window.currentAudio.src = urlBackup;
                     window.currentAudio.play().catch(err => {
-                        console.error("Fallo total de audio");
-                        stopAudio();
+                        console.error("Fallo general de audio");
+                        chunkIndex++;
+                        setTimeout(playNextChunk, 250); // Continuar a pesar del error
                     });
                 });
                 
+                // Throttling: Pausa táctica de 250ms entre audios para prevenir baneo de IP (Error 429)
                 window.currentAudio.onended = () => {
                     chunkIndex++;
-                    playNextChunk();
+                    setTimeout(playNextChunk, 250); 
+                };
+
+                // Si una petición de red falla o cuelga a la mitad, forzar salto
+                window.currentAudio.onerror = () => {
+                    console.warn("Fallo de red detectado, saltando fragmento...");
+                    chunkIndex++;
+                    setTimeout(playNextChunk, 250);
                 };
             };
             
-            // Lanzamiento asíncrono para asegurar que el Unlocker hizo efecto
-            setTimeout(playNextChunk, 50);
+            // Inicio de flujo con delay estratégico
+            setTimeout(playNextChunk, 100);
         });
     </script>
 </body>
