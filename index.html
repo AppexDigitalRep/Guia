@@ -231,7 +231,7 @@
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
-        /* FAB MODULE (FLOATING ACTION BUTTON) - TEAL/GOLD LUMINOSITY */
+        /* FAB MODULE (FLOATING ACTION BUTTON) */
         .audio-control {
             position: fixed;
             bottom: 40px;
@@ -406,26 +406,16 @@
         sections.forEach(sec => observer.observe(sec));
 
         /**
-         * CORE LOGIC: WEB SPEECH API & DICCIONARIO FONÉTICO (REFACCIONADO PARA IOS/ANDROID)
+         * CORE LOGIC: CLOUD STREAMING AUDIO ENGINE (Extracción C4I)
+         * Evade bloqueos nativos del OS mediante carga de audio en red.
          */
         const playBtn = document.getElementById('play-btn');
         const iconPlay = document.getElementById('icon-play');
         const iconPause = document.getElementById('icon-pause');
         const audioText = document.getElementById('audio-text');
         
-        let synth = window.speechSynthesis;
         let isPlaying = false;
-        let utterance = new SpeechSynthesisUtterance();
-        let loadedVoices = [];
-
-        // Precarga de voces (Fondo pasivo)
-        function populateVoices() {
-            loadedVoices = synth.getVoices();
-        }
-        
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = populateVoices;
-        }
+        window.currentAudio = null;
 
         function getCleanText() {
             let content = document.getElementById('content-area').innerText;
@@ -450,67 +440,78 @@
             return content;
         }
 
-        // Configuración 100% Síncrona (Vital para evasión de bloqueos en Móvil)
-        function prepareUtteranceSync() {
-            utterance.text = getCleanText();
-            utterance.lang = 'es-MX'; 
-            utterance.rate = 0.82;    
-            utterance.pitch = 1.1;    
-            utterance.volume = 1.0;
-            
-            if (loadedVoices.length === 0) {
-                loadedVoices = synth.getVoices(); // Fallback síncrono si onvoiceschanged no disparó
-            }
-
-            const peacefulVoice = loadedVoices.find(v => 
-                (v.lang.includes('es') && 
-                (v.name.toLowerCase().includes('female') || 
-                 v.name.toLowerCase().includes('mujer') || 
-                 v.name.toLowerCase().includes('sabina') || 
-                 v.name.toLowerCase().includes('monica') ||
-                 v.name.toLowerCase().includes('lucia') ||
-                 v.name.toLowerCase().includes('natural'))
-                )) || loadedVoices.find(v => v.lang.includes('es'));
-
-            if(peacefulVoice) {
-                utterance.voice = peacefulVoice;
-            }
-
-            utterance.onend = resetUI;
-            utterance.onerror = resetUI;
-        }
-
-        function resetUI() {
+        function stopAudio() {
             isPlaying = false;
+            if (window.currentAudio && !window.currentAudio.paused) {
+                window.currentAudio.pause();
+                window.currentAudio = null;
+            }
             playBtn.classList.remove('playing');
             iconPlay.style.display = 'block';
             iconPause.style.display = 'none';
             audioText.textContent = 'Armonía';
         }
 
-        // Listener de eventos sin promesas (Evade Timeout de Gestos Táctiles OS)
         playBtn.addEventListener('click', (e) => {
             e.preventDefault();
             
-            if (!synth) {
-                console.error("Web Speech API no soportada.");
+            if (isPlaying) {
+                stopAudio();
                 return;
             }
 
-            if (isPlaying) {
-                synth.cancel();
-                resetUI();
-            } else {
-                synth.cancel(); // Purga el buffer del OS móvil (Libera atascos silenciosos)
-                prepareUtteranceSync(); // Configuración síncrona absoluta
-                synth.speak(utterance); // Disparo inmediato dentro del call stack del Click
+            isPlaying = true;
+            playBtn.classList.add('playing');
+            iconPlay.style.display = 'none';
+            iconPause.style.display = 'block';
+            audioText.textContent = 'Pausar';
+
+            const rawText = getCleanText();
+            // Limpieza de saltos de línea para el flujo
+            const cleanText = rawText.replace(/[\n\r]/g, ' ').replace(/\s{2,}/g, ' ');
+            // CHUNKING: Cortar texto en oraciones para evitar que la API externa colapse por payload grande
+            const chunks = cleanText.match(/[^.!?]+[.!?]+|\s*[^.!?]+$/g).filter(s => s.trim().length > 0);
+            let chunkIndex = 0;
+
+            window.currentAudio = new Audio();
+            
+            // SILENT UNLOCKER: Fuerza la liberación del permiso Autoplay en móviles
+            window.currentAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+            window.currentAudio.play().catch(err => { console.warn("Unlocker detectado", err); });
+            
+            // Ajuste de Paz: Disminuir la velocidad nativa de la voz de Google (0.85 = Paz y Claridad)
+            window.currentAudio.playbackRate = 0.85; 
+
+            const playNextChunk = () => {
+                if (chunkIndex >= chunks.length) {
+                    stopAudio();
+                    return;
+                }
                 
-                isPlaying = true;
-                playBtn.classList.add('playing');
-                iconPlay.style.display = 'none';
-                iconPause.style.display = 'block';
-                audioText.textContent = 'Pausar';
-            }
+                const payload = encodeURIComponent(chunks[chunkIndex].trim());
+                // Llamada a la nube (Google TTS) para renderizado acústico inmediato
+                const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=es-MX&q=${payload}`;
+                
+                window.currentAudio.src = url;
+                window.currentAudio.play().catch(e => {
+                    console.error("Audio Primario Bloqueado:", e);
+                    // Fallback de emergencia si Google bloquea temporalmente la IP
+                    const urlBackup = `https://dict.youdao.com/dictvoice?audio=${payload}&le=es`;
+                    window.currentAudio.src = urlBackup;
+                    window.currentAudio.play().catch(err => {
+                        console.error("Fallo total de audio");
+                        stopAudio();
+                    });
+                });
+                
+                window.currentAudio.onended = () => {
+                    chunkIndex++;
+                    playNextChunk();
+                };
+            };
+            
+            // Lanzamiento asíncrono para asegurar que el Unlocker hizo efecto
+            setTimeout(playNextChunk, 50);
         });
     </script>
 </body>
