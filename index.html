@@ -6,23 +6,24 @@
     <title>Illa de Soberanía - Katering</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
     <style>
-        /* CORE VARIABLES */
+        /* CORE VARIABLES: MANUEL ANTONIO BIOMIMETICS */
         :root {
             --gold-light: #FDF0B0;
             --gold-base: #D4AF37;
             --gold-dark: #997A15;
             --copper-base: #B87333;
-            --obsidian: #050507;
-            --charcoal: #121214;
+            --ocean-deep: #020C12;
+            --jungle-emerald: #061A14;
+            --teal-glow: #00E5FF;
             --text-primary: #EAEAEA;
-            --text-muted: #A0A0A0;
+            --text-muted: #A8B8B5;
             --transition-slow: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { box-sizing: border-box; }
 
         body {
-            background-color: var(--obsidian);
+            background-color: var(--ocean-deep);
             color: var(--text-primary);
             font-family: 'Spectral', serif;
             margin: 0;
@@ -30,19 +31,26 @@
             line-height: 1.8;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 50% 0%, #1a1a24 0%, transparent 50%),
-                radial-gradient(circle at 50% 100%, #1f140a 0%, transparent 50%);
+                radial-gradient(circle at 10% 0%, rgba(6, 26, 20, 0.9) 0%, transparent 60%),
+                radial-gradient(circle at 90% 100%, rgba(2, 28, 40, 0.9) 0%, transparent 60%),
+                radial-gradient(circle at 50% 50%, rgba(0, 50, 60, 0.4) 0%, transparent 80%);
             background-attachment: fixed;
         }
 
-        /* BACKGROUND RENDER (NO-HTTP SVG) */
-        .stars {
+        /* DYNAMIC BACKGROUND RENDER (NO-HTTP SVG) */
+        .particles {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: -50px; left: -50px; right: -50px; bottom: -50px;
             pointer-events: none;
             z-index: 0;
-            background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjUiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjE1MCIgcj0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMzUwIiBjeT0iMzAwIiByPSIwLjc1IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjQiLz48L3N2Zz4=') repeat;
-            opacity: 0.3;
+            background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjgiIGZpbGw9IiMwMGU1ZmYiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSIjZDRhZjM3IiBvcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIzNTAi cy0iMzAwIiByPSIwLjkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuNCIvPjwvc3ZnPg==') repeat;
+            opacity: 0.4;
+            animation: ocean-drift 40s linear infinite alternate;
+        }
+
+        @keyframes ocean-drift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(30px, 30px) rotate(2deg); }
         }
 
         /* LAYOUT & COMPONENT ARCHITECTURE */
@@ -55,15 +63,15 @@
         }
 
         .glass-card {
-            background: rgba(18, 18, 20, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(4, 15, 20, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(0, 229, 255, 0.15);
             border-radius: 20px;
             padding: 60px 50px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6),
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7),
                         inset 0 1px 0 rgba(255,255,255,0.05),
-                        inset 0 0 30px rgba(212, 175, 55, 0.04);
+                        inset 0 0 40px rgba(0, 229, 255, 0.05);
             opacity: 0;
             transform: translateY(30px);
             animation: fadeUp 1.2s var(--transition-slow) forwards;
@@ -96,10 +104,10 @@
             letter-spacing: 6px;
             margin: 0 0 15px 0;
             text-transform: uppercase;
-            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-base) 50%, var(--gold-dark) 100%);
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-base) 50%, var(--teal-glow) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(212, 175, 55, 0.25);
+            text-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
         }
 
         .subtitle {
@@ -108,6 +116,7 @@
             font-size: 1.1rem;
             letter-spacing: 2px;
             font-weight: 300;
+            text-shadow: 0 0 10px rgba(184, 115, 51, 0.3);
         }
 
         .intro {
@@ -139,10 +148,10 @@
             position: absolute;
             left: 0;
             top: 0;
-            width: 1px;
+            width: 2px;
             height: 100%;
-            background: linear-gradient(to bottom, transparent, var(--gold-light), transparent);
-            opacity: 0.6;
+            background: linear-gradient(to bottom, transparent, var(--teal-glow), var(--gold-base), transparent);
+            opacity: 0.5;
         }
 
         h2 {
@@ -161,8 +170,8 @@
         h2::before {
             content: '✦';
             font-size: 0.8rem;
-            color: var(--gold-base);
-            text-shadow: 0 0 10px var(--gold-light);
+            color: var(--teal-glow);
+            text-shadow: 0 0 10px var(--teal-glow);
         }
 
         p {
@@ -178,7 +187,7 @@
             color: var(--gold-light);
             font-weight: 400;
             font-style: italic;
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
             letter-spacing: 0.5px;
         }
 
@@ -187,10 +196,10 @@
             text-align: center;
             margin: 60px 0;
             font-size: 1.5rem;
-            color: var(--gold-base);
-            opacity: 0.8;
+            color: var(--teal-glow);
+            opacity: 0.6;
             letter-spacing: 15px;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
         }
 
         footer {
@@ -207,8 +216,8 @@
             transform: translateX(-50%);
             width: 150px;
             height: 1px;
-            background: radial-gradient(circle, var(--gold-light), transparent);
-            opacity: 0.7;
+            background: radial-gradient(circle, var(--teal-glow), transparent);
+            opacity: 0.6;
         }
 
         .footer-text {
@@ -217,10 +226,10 @@
             font-size: 1.2rem;
             letter-spacing: 3px;
             line-height: 2;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
-        /* FAB MODULE (FLOATING ACTION BUTTON) - LUMINOSIDAD MAXIMIZADA */
+        /* FAB MODULE (FLOATING ACTION BUTTON) - TEAL/GOLD LUMINOSITY */
         .audio-control {
             position: fixed;
             bottom: 40px;
@@ -232,8 +241,8 @@
         }
 
         .audio-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--gold-light);
+            background: rgba(2, 12, 18, 0.7);
+            border: 1px solid var(--teal-glow);
             color: var(--gold-light);
             width: 60px;
             height: 60px;
@@ -244,27 +253,28 @@
             cursor: pointer;
             backdrop-filter: blur(15px);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2), inset 0 0 15px rgba(212, 175, 55, 0.1);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 229, 255, 0.1);
             outline: none;
         }
 
         .audio-btn:hover {
-            background: rgba(212, 175, 55, 0.1);
-            box-shadow: 0 0 35px rgba(212, 175, 55, 0.4), inset 0 0 20px rgba(212, 175, 55, 0.2);
+            background: rgba(0, 229, 255, 0.1);
+            box-shadow: 0 0 35px rgba(0, 229, 255, 0.3), inset 0 0 20px rgba(212, 175, 55, 0.2);
+            border-color: var(--gold-light);
             transform: scale(1.08);
         }
 
         .audio-btn.playing {
-            animation: pulse-light 2.5s infinite;
-            background: rgba(212, 175, 55, 0.15);
+            animation: pulse-ocean 2.5s infinite;
+            background: rgba(0, 229, 255, 0.15);
             color: #FFF;
             border-color: #FFF;
         }
 
-        @keyframes pulse-light {
-            0% { box-shadow: 0 0 0 0 rgba(249, 229, 150, 0.5); }
-            70% { box-shadow: 0 0 0 20px rgba(249, 229, 150, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(249, 229, 150, 0); }
+        @keyframes pulse-ocean {
+            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 229, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
         }
 
         .audio-btn svg {
@@ -278,13 +288,13 @@
             font-family: 'Cinzel', serif;
             font-size: 0.85rem;
             letter-spacing: 2px;
-            color: var(--gold-light);
+            color: var(--teal-glow);
             opacity: 0;
             transform: translateX(10px);
             transition: all 0.3s ease;
             pointer-events: none;
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
         }
 
         .audio-control:hover .audio-tooltip {
@@ -304,7 +314,7 @@
 </head>
 <body>
 
-    <div class="stars"></div>
+    <div class="particles"></div>
 
     <div class="container">
         <article class="glass-card" id="content-area">
@@ -314,41 +324,51 @@
             </header>
 
             <div class="intro">
-                Esta pieza no es un adorno. Es un artefacto de poder y un espejo de tu propia divinidad. 
-                Naciste en Cusco, el ombligo del mundo, y llevas en tu sangre la certeza de que el universo 
-                no es algo que te sucede, sino algo que tú eres.
+                Esta pieza no es un adorno; es un espejo de tu propia fuerza. Naciste en <span class="highlight">Cusco</span>, el ombligo del mundo, y llevas en la sangre esa certeza de que el universo no es algo que te pasa, sino algo que tú misma diseñas. Hay un ritmo en todo lo que nos rodea que no es casualidad, es una armonía que se siente cuando estamos presentes.
             </div>
 
             <span class="ornament">✧ ✦ ✧</span>
 
             <section class="section">
-                <h2>El Ayni y la Chacana Oculta</h2>
-                <p>Hace un tiempo, tú trajiste la <span class="highlight">Chacana</span> a mi vida. Ese símbolo me dio la estructura para entender mis facetas y moldear mi realidad. Esta joya es mi <span class="highlight">Ayni</span>, mi reciprocidad sagrada, hacia ti.</p>
-                <p>En el centro de la espiral de alambre, hay una Chacana oculta. Te devuelvo el símbolo, tejido con mis propias manos, para entregarte la misma llave maestra: el poder de reclamar tu soberanía y crear tu propio mundo. Eres una Creadora absoluta.</p>
+                <h2>El Vínculo y la Chakana</h2>
+                <p>Tú trajiste la <span class="highlight">Chakana</span> a mi vida de una forma muy especial. Tu madre sintió que esa pieza era para mí, la hizo tejer y me la envió; ahora, en esta pieza que hoy te entrego, es mi madre quien ha puesto sus manos y su arte para ayudarme a crearla para ti. Es un intercambio de cuidados entre quienes nos dieron la vida, una forma de honrar ese hilo que nos une.</p>
+                <p>Si observas el corazón de este collar, verás una <span class="highlight">Chakana</span> oculta, integrada en la espiral de la concha más grande. Fue puesta ahí con intención, como el eje central de la pieza, y está custodiada por estas tres conchas que la sostienen.</p>
             </section>
 
             <section class="section">
-                <h2>El Llamado y la Alquimia de la Ruptura</h2>
-                <p>Las conchas marinas de esta pieza me llamaron; pidieron ser transformadas. Están libres de deudas y vaciadas de pasado, listas para que tú escribas su nueva historia.</p>
-                <p>Hay un secreto en ellas: mientras las forjaba, una se quebró. En lugar de detenerme, quebré la otra intencionalmente para crear una simetría perfecta. Transformé el error en diseño. <span class="highlight">Eso es la vida:</span> cuando algo se quiebre, usa tu adaptabilidad para moldear una geometría aún más hermosa.</p>
+                <h2>La Fuerza del 3 y el Tiempo</h2>
+                <p>Estas tres conchas no están ahí por azar; manifiestan el número que nos ha estado marcando el camino en momentos clave durante estos días: en las fechas, en los encuentros y en las señales que nos han traído hasta el día de hoy.</p>
+                <p>Además, en sus formas puedes ver esa espiral infinita que representa el tiempo, recordándonos que todo fluye y regresa en el momento justo. Para mí, la presencia de estas tres piezas es lo que le da el equilibrio al centro; representa la base necesaria para que lo que estamos construyendo tenga solidez, orden y proyección.</p>
+                <p>Al entregarte este regalo, te devuelvo el símbolo y la fuerza de ese número, para que siempre recuerdes tu poder de diseñar tu propio mundo y de caminar con la seguridad de quien sabe exactamente quién es.</p>
             </section>
 
             <section class="section">
-                <h2>Confluencia de Fuerzas</h2>
-                <p>Invoqué un ecosistema de fuerzas para construir esto. El <span class="highlight">Ojo de Tigre</span> que ves al frente y el que cuida tu espalda son el ancla. Resuenan con la Leona de tu piel.</p>
-                <p>Te entregan la visión del Águila, la fluidez del Pulpo en las espirales y la decisión frontal del <span class="highlight">Samurái Jabalí</span>: esa voluntad de fuego que arrasa con el miedo. Tienes la retaguardia protegida y el frente despejado.</p>
+                <h2>El Altar de Piedras y la Belleza de lo Imperfecto</h2>
+                <p>Estas piezas tienen su propia historia. Antes de llegar a tus manos, estuvieron días reposando en mi frasco de vidrio, rodeadas por los tesoros que he recogido en mis viajes: la pirámide de jade de Guatemala, el león de sal de Colombia y el <span class="highlight">quetzal</span> de Costa Rica. También estuvieron junto a esa colección de plumas, semillas y conchas que me ha entregado esta misma tierra que hoy nos rodea.</p>
+                <p>Estas conchas en particular me llamaron; en cuanto las vi, sentí ese impulso claro de que debían ser para ti. Quiero que sepas que están libres de deuda; han sido purificadas de cualquier pasado para que seas tú quien escriba su futuro sobre ellas.</p>
+                <p>Mientras las trabajaba, pasó algo que me hizo entenderlo todo: una de ellas se quebró entre mis manos. En ese momento sentí que no era un fallo, sino que la pieza me estaba enseñando algo importante. Decidí quebrar la otra para que ambas encajaran en una forma nueva, más real. Fue ahí donde comprendí lo que estas conchas querían decirte: cuando parece que algo se rompe, no es el final, sino la oportunidad de usar lo que sentimos para crear algo todavía más bonito, más fuerte y que nos pertenezca de verdad.</p>
             </section>
 
             <section class="section">
-                <h2>El Espectro Completo</h2>
-                <p>Infundí la pieza con el prisma de la creación: el <span class="highlight">fuego rojo</span> de la acción, el <span class="highlight">azul</span> de la verdad, el <span class="highlight">verde</span> de la sanación y el <span class="highlight">amarillo</span> de la luz absoluta.</p>
-                <p>Tienes el sol en el oro, la tierra en el cobre, el mar en la concha y el fuego en la intención.</p>
+                <h2>Fuerzas en Movimiento</h2>
+                <p>En el diseño busqué integrar la fuerza de los animales que nos cuidan. Tienes el <span class="highlight">Ojo de Tigre</span> adelante y atrás para proteger tu espalda. En los detalles quise plasmar la visión del Águila, la determinación de nuestro Puma y la voluntad del Jabalí que avanza con firmeza.</p>
+                <p>El Pulpo aparece en cada espiral de cobre, dándote esa fluidez para adaptarte a cualquier corriente, y en esas mismas espirales habita el Aire: ese espacio necesario para que las ideas respiren y todo fluya sin estancarse.</p>
+            </section>
+
+            <section class="section">
+                <h2>La Meditación y el Prisma de Luz</h2>
+                <p>Además del tiempo que pasaron en el frasco, sostuve estas conchas en mis manos durante una meditación profunda para cargarlas con mi propia energía. En ese momento, las infundí visualizando el espectro completo de la creación hasta llegar a la luz blanca: el rojo para la acción, el azul para tu verdad, el verde que sana y el amarillo de la luz absoluta.</p>
+                <p>Para los aretes, mi mamá encontró estas bases con forma de <span class="highlight">Mandala</span> y supimos que eran el cierre perfecto para este diseño, representando el orden y la paz que surge cuando todo encaja.</p>
+            </section>
+
+            <section class="section">
+                <h2>Cierre de los Elementos</h2>
+                <p>Aquí tienes el equilibrio de lo que somos: tienes el sol en el oro, la tierra en el cobre, el mar en la concha, el aire en las espirales y el fuego en la intención de este regalo. Llévalo con la soberanía de quien es dueña absoluta de su propio destino.</p>
             </section>
 
             <footer>
                 <div class="footer-text">
-                    Llévalo como la dueña absoluta de tu propio castillo.<br>
-                    <span style="font-size: 1.5rem; margin-top: 15px; display: inline-block;">Eres infinita.</span>
+                    <span style="font-size: 1.8rem; margin-top: 15px; display: inline-block;">Eres infinita.</span>
                 </div>
             </footer>
         </article>
@@ -384,7 +404,7 @@
 
         /**
          * CORE LOGIC: WEB SPEECH API & DICCIONARIO FONÉTICO
-         * Orquesta la síntesis asíncrona de voz asegurando precisión en nomenclatura propia.
+         * Orquesta la síntesis asíncrona de voz asegurando precisión en nomenclatura y cadencia de paz.
          */
         const playBtn = document.getElementById('play-btn');
         const iconPlay = document.getElementById('icon-play');
@@ -406,10 +426,12 @@
                 "Illa": "Íya",
                 "Katering": "Káterin",
                 "Ayni": "Aini",
-                "Chacana": "Chakána",
+                "Chakana": "Chakána",
                 "Cusco": "Kúsco",
                 "Samurái": "Samurái",
-                "Jabalí": "Jabalí"
+                "Jabalí": "Jabalí",
+                "Mandala": "Mándala",
+                "Quetzal": "Ketsál"
             };
 
             // Iteración y reemplazo global respetando límites de palabras
