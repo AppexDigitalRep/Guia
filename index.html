@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Illa de Soberanía - Katering</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌻</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
@@ -36,6 +36,7 @@
                 radial-gradient(circle at 90% 100%, rgba(2, 28, 40, 0.9) 0%, transparent 60%),
                 radial-gradient(circle at 50% 50%, rgba(0, 50, 60, 0.4) 0%, transparent 80%);
             background-attachment: fixed;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* DYNAMIC BACKGROUND RENDER (NO-HTTP SVG) */
@@ -44,7 +45,7 @@
             top: -50px; left: -50px; right: -50px; bottom: -50px;
             pointer-events: none;
             z-index: 0;
-            background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjgiIGZpbGw9IiMwMGU1ZmYiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjE1MCIgcj=ï¿½1LjIiIGZpbGw9IiN4NGE5MzciIG9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjMwMCIgcj0iMC45IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjQiLz48L3N2Zz4=') repeat;
+            background: transparent url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjgiIGZpbGw9IiMwMGU1ZmYiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSIjZDRhZjM3IiBvcGFjaXR5PSIwLjMyLz48Y2lyY2xlIGN4PSIzNTAiIGN5PSIzMDAiIHI9IjAuOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC40Ii8+PC9zdmc+') repeat;
             opacity: 0.4;
             animation: ocean-drift 40s linear infinite alternate;
         }
@@ -253,12 +254,14 @@
             align-items: center;
             cursor: pointer;
             backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 0 25px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(0, 229, 255, 0.1);
             outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .audio-btn:hover {
+        .audio-btn:hover, .audio-btn:active {
             background: rgba(0, 229, 255, 0.1);
             box-shadow: 0 0 35px rgba(0, 229, 255, 0.3), inset 0 0 20px rgba(212, 175, 55, 0.2);
             border-color: var(--gold-light);
@@ -332,8 +335,8 @@
 
             <section class="section">
                 <h2>El Vínculo y la Chakana</h2>
-                <p>Tú trajiste la <span class="highlight">Chacana</span> a mi vida de una forma muy especial. Tu madre sintió que esa pieza era para mí, la hizo tejer y me la envió; ahora, en esta pieza que hoy te entrego, es mi madre quien ha puesto sus manos y su arte para ayudarme a crearla para ti. Es un intercambio de cuidados entre quienes nos dieron la vida, una forma de honrar ese hilo que nos une.</p>
-                <p>Si observas el corazón de este collar, verás una <span class="highlight">Chacana</span> oculta, integrada en la espiral de la concha más grande. Fue puesta ahí con intención, como el eje central de la pieza, y está custodiada por estas tres conchas que la sostienen.</p>
+                <p>Tú trajiste la <span class="highlight">Chakana</span> a mi vida de una forma muy especial. Tu madre sintió que esa pieza era para mí, la hizo tejer y me la envió; ahora, en esta pieza que hoy te entrego, es mi madre quien ha puesto sus manos y su arte para ayudarme a crearla para ti. Es un intercambio de cuidados entre quienes nos dieron la vida, una forma de honrar ese hilo que nos une.</p>
+                <p>Si observas el corazón de este collar, verás una <span class="highlight">Chakana</span> oculta, integrada en la espiral de la concha más grande. Fue puesta ahí con intención, como el eje central de la pieza, y está custodiada por estas tres conchas que la sostienen.</p>
             </section>
 
             <section class="section">
@@ -390,7 +393,6 @@
     <script>
         /**
          * CORE LOGIC: INTERSECTION OBSERVER
-         * Gestiona el renderizado diferido de los nodos del DOM para maximizar rendimiento.
          */
         const sections = document.querySelectorAll('.section');
         const observer = new IntersectionObserver((entries) => {
@@ -404,8 +406,7 @@
         sections.forEach(sec => observer.observe(sec));
 
         /**
-         * CORE LOGIC: WEB SPEECH API & DICCIONARIO FONÉTICO
-         * Orquesta la síntesis asíncrona de voz asegurando precisión en nomenclatura y cadencia de paz.
+         * CORE LOGIC: WEB SPEECH API & DICCIONARIO FONÉTICO (REFACCIONADO PARA IOS/ANDROID)
          */
         const playBtn = document.getElementById('play-btn');
         const iconPlay = document.getElementById('icon-play');
@@ -414,10 +415,18 @@
         
         let synth = window.speechSynthesis;
         let isPlaying = false;
-        let utterance = null;
-        let voicesLoaded = false;
+        let utterance = new SpeechSynthesisUtterance();
+        let loadedVoices = [];
 
-        // Limpieza de Nodos DOM y calibración fonética para motor TTS
+        // Precarga de voces (Fondo pasivo)
+        function populateVoices() {
+            loadedVoices = synth.getVoices();
+        }
+        
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoices;
+        }
+
         function getCleanText() {
             let content = document.getElementById('content-area').innerText;
             content = content.replace(/✧ ✦ ✧/g, ''); 
@@ -438,39 +447,22 @@
                 const regex = new RegExp(`\\b${word}\\b`, 'gi');
                 content = content.replace(regex, phonetic);
             }
-
             return content;
         }
 
-        function loadVoices() {
-            return new Promise((resolve) => {
-                let voices = synth.getVoices();
-                if (voices.length > 0) {
-                    voicesLoaded = true;
-                    resolve(voices);
-                } else {
-                    synth.onvoiceschanged = () => {
-                        voices = synth.getVoices();
-                        voicesLoaded = true;
-                        resolve(voices);
-                    };
-                }
-            });
-        }
-
-        async function initAudio() {
-            if (utterance) return;
-            
-            // Fuerza la carga de voces, crítico para móviles
-            const voices = await loadVoices();
-            
-            utterance = new SpeechSynthesisUtterance(getCleanText());
-            utterance.lang = 'es-MX';
-            utterance.rate = 0.82;
-            utterance.pitch = 1.1;
+        // Configuración 100% Síncrona (Vital para evasión de bloqueos en Móvil)
+        function prepareUtteranceSync() {
+            utterance.text = getCleanText();
+            utterance.lang = 'es-MX'; 
+            utterance.rate = 0.82;    
+            utterance.pitch = 1.1;    
             utterance.volume = 1.0;
             
-            const peacefulVoice = voices.find(v => 
+            if (loadedVoices.length === 0) {
+                loadedVoices = synth.getVoices(); // Fallback síncrono si onvoiceschanged no disparó
+            }
+
+            const peacefulVoice = loadedVoices.find(v => 
                 (v.lang.includes('es') && 
                 (v.name.toLowerCase().includes('female') || 
                  v.name.toLowerCase().includes('mujer') || 
@@ -478,7 +470,7 @@
                  v.name.toLowerCase().includes('monica') ||
                  v.name.toLowerCase().includes('lucia') ||
                  v.name.toLowerCase().includes('natural'))
-                )) || voices.find(v => v.lang.includes('es'));
+                )) || loadedVoices.find(v => v.lang.includes('es'));
 
             if(peacefulVoice) {
                 utterance.voice = peacefulVoice;
@@ -496,7 +488,10 @@
             audioText.textContent = 'Armonía';
         }
 
-        playBtn.addEventListener('click', async () => {
+        // Listener de eventos sin promesas (Evade Timeout de Gestos Táctiles OS)
+        playBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
             if (!synth) {
                 console.error("Web Speech API no soportada.");
                 return;
@@ -506,9 +501,10 @@
                 synth.cancel();
                 resetUI();
             } else {
-                // Pre-inicialización en el click para evadir bloqueos móviles
-                await initAudio();
-                synth.speak(utterance);
+                synth.cancel(); // Purga el buffer del OS móvil (Libera atascos silenciosos)
+                prepareUtteranceSync(); // Configuración síncrona absoluta
+                synth.speak(utterance); // Disparo inmediato dentro del call stack del Click
+                
                 isPlaying = true;
                 playBtn.classList.add('playing');
                 iconPlay.style.display = 'none';
@@ -516,11 +512,6 @@
                 audioText.textContent = 'Pausar';
             }
         });
-
-        // Carga inicial pasiva
-        if (synth && speechSynthesis.onvoiceschanged !== undefined) {
-            loadVoices();
-        }
     </script>
 </body>
 </html>
